@@ -41,9 +41,16 @@ files:
     destination: /var/www/phplaravel/
   - source: /server.php
     destination: /var/www/phplaravel/
+  - source: /webpack.config.js
+    destination: /var/www/phplaravel/
+  - source: /webpack.mix.js
+    destination: /var/www/phplaravel/
 hooks:
   AfterInstall:
     - location: scripts/install_dependencies
+      timeout: 900
+      runas: root
+    - location: scripts/build_app.sh
       timeout: 900
       runas: root
     - location: scripts/start_server
