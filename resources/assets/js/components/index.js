@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { MuiThemeProvider, createMuiTheme  } from 'material-ui/styles';
+import { MuiThemeProvider, createMuiTheme  } from '@material-ui/core/styles';
 
 import configureStore from '../redux/configureStore';
 import rootSaga from './redux/sagas';

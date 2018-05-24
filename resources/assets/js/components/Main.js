@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import matchSorter from 'match-sorter';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 import * as tgcdtActions from '../redux/tgcdt/actions';
 import {getSearchData, getSearchStatuses} from './redux/reducer';
