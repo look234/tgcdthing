@@ -2,17 +2,32 @@
   "private": true,
   "scripts": {
     "prod": "gulp --production",
-    "dev": "gulp watch"
+    "dev": "gulp watch",
+    "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "devDependencies": {
     "bootstrap-sass": "^3.3.7",
-    "gulp": "^3.9.1",
+    "copy-webpack-plugin": "^4.3.1",
+    "cross-env": "^5.1.3",
     "jquery": "^3.1.0",
-    "laravel-elixir": "^6.0.0-9",
-    "laravel-elixir-vue-2": "^0.2.0",
-    "laravel-elixir-webpack-official": "^1.0.2",
-    "lodash": "^4.16.2",
-    "vue": "^2.0.1",
-    "vue-resource": "^1.0.3"
+    "laravel-mix": "^1.7.2"
+  },
+  "dependencies": {
+    "@material-ui/icons": "^1.0.0-beta.43",
+    "axios": "^0.17.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-react": "^6.24.1",
+    "match-sorter": "^2.2.0",
+    "material-ui": "^1.0.0-beta.44",
+    "material-ui-icons": "^1.0.0-beta.36",
+    "promise": "^8.0.1",
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-table": "^6.7.6",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0"
   }
 }
