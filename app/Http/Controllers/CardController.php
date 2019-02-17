@@ -10,6 +10,20 @@ use Illuminate\Support\Facades\DB;
 
 class CardController extends Controller
 {
+
+    public function get(Request $request, $id) {
+        return Card::where('id', $id)
+            ->with('attributes')
+            ->with('images')
+            ->with('names')
+            ->with('texts')
+            ->with('sets')
+            ->with('game')
+//            //->with('events')
+//            //->with('artists')
+            ->get();
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return mixed
@@ -62,12 +76,12 @@ class CardController extends Controller
             && !empty($request->input('filtered'))) {
             $rawFilters = $request->input('filtered');
             foreach($rawFilters as $key => $value) {
-//                if ($value['id'] === 'printed_name') {
-//                    $nameFilters[] = ['name', 'like', '%' . $value['value'] . '%'];
+                if ($value['id'] === 'printed_name') {
+                    $nameFilters[] = ['name', 'like', '%' . $value['value'] . '%'];
 //                } else
-                    if ($value['id'] === 'set') {
-                    $setFilters[] = ['eng_name', 'like', '%' . $value['value'] . '%'];
-                } else {
+//                    if ($value['id'] === 'set') {
+//                    $setFilters[] = ['eng_name', 'like', '%' . $value['value'] . '%'];
+//                } else {
                     $filters[] = [$value['id'], 'like', '%' . $value['value'] . '%'];
                 }
             }
@@ -88,13 +102,13 @@ class CardController extends Controller
             $cards->with('sets');
         }
 
-//        if (!empty($nameFilters)) {
-//            $cards->with('names')->whereHas('names', function ($query) use ($nameFilters) {
-//                $query->where($nameFilters);
-//            });
-//        } else {
+        if (!empty($nameFilters)) {
+            $cards->with('names')->orWhereHas('names', function ($query) use ($nameFilters) {
+                $query->where($nameFilters);
+            });
+        } else {
             $cards->with('names');
-        //}
+        }
 
 
         return $cards->with('attributes', 'images', 'texts', 'game')->paginate($pageSize);

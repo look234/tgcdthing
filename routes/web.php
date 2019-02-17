@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', function () {
+Route::get('/{subRoute1?}/{subRoute2?}/{subRoute3?}', function () {
     return view('welcome');
 });
 

@@ -41,6 +41,25 @@ const tgcdtReducer = (state = initialState, action) => {
                 }
             };
 
+        case actionTypes.GET_CARD_REQUEST:
+            return { ...state, statuses: {...state.statuses, error: '', fetching: true}};
+        case actionTypes.GET_CARD_FAILURE:
+            return { ...state, statuses: {...state.statuses, error: '', fetching: false}};
+        case actionTypes.GET_CARD_SUCCESS:
+            return {
+                ...state,
+                byId: {
+                    ...state.byId,
+                    [action.payload.card[0].id]: action.payload.card[0],
+                },
+                statuses: {
+                    ...state.statuses,
+                    error: '',
+                    fetching: false,
+                    lastUpdated: action.payload.receivedAt,
+                }
+            };
+
         default:
             return state;
     }
@@ -50,3 +69,6 @@ export default tgcdtReducer;
 
 export const getSearchData = (state) => state.byId;
 export const getSearchStatuses = (state) => state.statuses;
+
+export const getCardData = (state, id) => state.byId[id];
+export const getCardStatuses = (state) => state.statuses;
