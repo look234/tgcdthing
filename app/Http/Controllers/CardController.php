@@ -78,12 +78,12 @@ class CardController extends Controller
             foreach($rawFilters as $key => $value) {
                 if ($value['id'] === 'printed_name') {
                     $nameFilters[] = ['name', 'like', '%' . $value['value'] . '%'];
-//                } else
-//                    if ($value['id'] === 'set') {
-//                    $setFilters[] = ['eng_name', 'like', '%' . $value['value'] . '%'];
-//                } else {
-                    $filters[] = [$value['id'], 'like', '%' . $value['value'] . '%'];
+
+                } else if ($value['id'] === 'set') {
+                    $setFilters[] = ['eng_name', 'like', '%' . $value['value'] . '%'];
                 }
+
+                $filters[] = [$value['id'], 'like', '%' . $value['value'] . '%'];
             }
         }
 
@@ -102,13 +102,13 @@ class CardController extends Controller
             $cards->with('sets');
         }
 
-        if (!empty($nameFilters)) {
-            $cards->with('names')->orWhereHas('names', function ($query) use ($nameFilters) {
-                $query->where($nameFilters);
-            });
-        } else {
-            $cards->with('names');
-        }
+//        if (!empty($nameFilters)) {
+//            $cards->with('names')->orWhereHas('names', function ($query) use ($nameFilters) {
+//                $query->where($nameFilters);
+//            });
+//        } else {
+//            $cards->with('names');
+//        }
 
 
         return $cards->with('attributes', 'images', 'texts', 'game')->paginate($pageSize);
