@@ -186,6 +186,11 @@ class Search extends React.Component {
                             id: "game",
                             maxWidth: 100,
                             accessor: (d) => d.game.en_name,
+                            Cell: (row) => {
+                                console.log(row.original.game.logo);
+                                var logo = (row.original.game.logo != null ? <img src={row.original.game.logo} style={{maxWidth: 55, maxHeight: 25}} /> : '');
+                                return <div>{logo}{row.original.game.en_name}</div>;
+                            }
                         },
                     ]}
                 />

@@ -13,5 +13,6 @@ class Game extends Model
      */
     protected $visible = [
         'en_name',
+        'logo',
     ];
 }
