@@ -76,7 +76,6 @@ function SimpleCard(props) {
                     </CardContent>
                 </Card>
             </Grid>
-
             <Grid item xs={12}>
                 <Card className={classes.card}>
                     <CardContent>
