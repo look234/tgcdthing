@@ -14,9 +14,9 @@ use Illuminate\Http\Request;
 */
 Route::post('/card/search', 'CardController@search');
 
-Route::get('/card/related', 'CardController@getRelatedByName');
+Route::get('/card/{id}', 'CardController@get')->where('id', '[0-9]+');;
 
-Route::get('/card/{id}', 'CardController@get');
+Route::get('/card/related', 'CardController@getRelatedByName');
 
 Route::post('/card/search/fancy', 'CardController@searchWithFilters');
 

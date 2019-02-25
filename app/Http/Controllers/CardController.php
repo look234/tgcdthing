@@ -73,6 +73,7 @@ class CardController extends Controller
             ->with('sets')
             ->join('card_set', 'cards.id', '=', 'card_set.card_id')
             ->join('sets', 'sets.id', '=', 'card_set.set_id')
+            ->select(['card_set.id AS card_set_id', 'cards.*'])
             ->orderBy('sets.release_date', 'DESC')
             ->get();
         //->paginate($pageSize);
