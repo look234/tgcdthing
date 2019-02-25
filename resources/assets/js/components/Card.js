@@ -1,17 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import {withStyles} from '@material-ui/core/styles';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import ImageIcon from '@material-ui/icons/Image';
 
 const styles = (theme) => ({
     root: {
-        fontSize:  16,
+        fontSize: 16,
         flexGrow: 1,
     },
     paper: {
@@ -33,7 +37,7 @@ const styles = (theme) => ({
 });
 
 function SimpleCard(props) {
-    const { classes, id, cardData } = props;
+    const {classes, id, cardData} = props;
     console.log('Card component');
     console.log(cardData);
 
@@ -41,11 +45,24 @@ function SimpleCard(props) {
     let setContent = null;
 
     if (cardData.sets) {
-        setContent = cardData.sets.map((data) => (
-            <Typography variant="display2">
-                {cardData.sets ? data.release_date : ''} • {cardData.sets ? data.eng_name : ''} ({cardData.sets ? data.language : ''})
-            </Typography>
-        ));
+        setContent = cardData.sets.map((data) => {
+                const primaryText = `${data.release_date ? data.release_date : ''} • ${data.eng_name ? data.eng_name : ''}`;
+                const secondaryText = `${data.language ? data.language : ''}`;
+                return (
+                    <ListItem button component="a" href={`/set/${data.id}`}>
+                        <ListItemIcon>
+                            <ImageIcon/>
+                        </ListItemIcon>
+                        <ListItemText
+                            disableTypography
+                            inset
+                            primary={<Typography variant="title">{primaryText}</Typography>}
+                            secondary={<Typography variant="subheading">{secondaryText}</Typography>}
+                        />
+                    </ListItem>
+                );
+            }
+        );
     }
 
     if (cardData) {
@@ -81,9 +98,9 @@ function SimpleCard(props) {
                     <CardContent>
                         Found in these sets:
                     </CardContent>
-                    <CardContent>
+                    <List>
                         {setContent}
-                    </CardContent>
+                    </List>
                 </Card>
             </Grid>
         </Grid>

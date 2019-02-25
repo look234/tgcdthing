@@ -2,7 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Search from './Search';
 import CardContainer from '../containers/CardContainer';
-import Set from './Set';
+import SetContainer from '../containers/SetContainer';
+import SetSearch from './SetSearch';
 
 const BasicExample = () => (
     <Router>
@@ -10,6 +11,8 @@ const BasicExample = () => (
             <Route exact path="/" component={Home} />
             <Route path="/topics" component={Topics} />
             <Route path="/card/:id" component={CardHolder} />
+            <Route exact path="/set" component={SetSearchContainer} />
+            <Route path="/set/:id" component={SetHolder} />
         </div>
     </Router>
 );
@@ -20,6 +23,14 @@ const Home = () => (
 
 const CardHolder = ({ match }) => (
     <CardContainer id={parseInt(match.params.id)} />
+);
+
+const SetSearchContainer = () => (
+    <SetSearch />
+);
+
+const SetHolder = ({ match }) => (
+    <SetContainer id={parseInt(match.params.id)} />
 );
 
 const Topics = ({ match }) => (

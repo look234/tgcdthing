@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/react-table@latest/react-table.css">
 </head>
 <body>
-<h2 style="text-align: center"> Laravel and React applications </h2>
+<h2 style="text-align: center">TGCDT</h2>
 <div id="root"></div>
 <script src="{{asset('js/app.js')}}" ></script>
 </body>

@@ -60,6 +60,47 @@ const tgcdtReducer = (state = initialState, action) => {
                 }
             };
 
+        case actionTypes.GET_SET_SEARCH_REQUEST:
+            return { ...state, statuses: {...state.statuses, error: '', fetching: true}};
+        case actionTypes.GET_SET_SEARCH_FAILURE:
+            return { ...state, statuses: {...state.statuses, error: '', fetching: false}};
+        case actionTypes.GET_SET_SEARCH_SUCCESS:
+            return {
+                ...state,
+                byId: action.payload.sets.data,
+                statuses: {
+                    ...state.statuses,
+                    error: '',
+                    fetching: false,
+                    lastUpdated: action.payload.receivedAt,
+                    currentPage: action.payload.sets.current_page,
+                    from: action.payload.sets.from,
+                    lastPage: action.payload.sets.last_page,
+                    perPage: action.payload.sets.per_page,
+                    to: action.payload.sets.to,
+                    total: action.payload.sets.total,
+                }
+            };
+
+        case actionTypes.GET_SET_REQUEST:
+            return { ...state, statuses: {...state.statuses, error: '', fetching: true}};
+        case actionTypes.GET_SET_FAILURE:
+            return { ...state, statuses: {...state.statuses, error: '', fetching: false}};
+        case actionTypes.GET_SET_SUCCESS:
+            return {
+                ...state,
+                byId: {
+                    ...state.byId,
+                    [action.payload.set[0].id]: action.payload.set[0],
+                },
+                statuses: {
+                    ...state.statuses,
+                    error: '',
+                    fetching: false,
+                    lastUpdated: action.payload.receivedAt,
+                }
+            };
+
         default:
             return state;
     }
@@ -72,3 +113,9 @@ export const getSearchStatuses = (state) => state.statuses;
 
 export const getCardData = (state, id) => state.byId[id];
 export const getCardStatuses = (state) => state.statuses;
+
+export const getSetSearchData = (state) => state.byId;
+export const getSetSearchStatuses = (state) => state.statuses;
+
+export const getSetData = (state, id) => state.byId[id];
+export const getSetStatuses = (state) => state.statuses;

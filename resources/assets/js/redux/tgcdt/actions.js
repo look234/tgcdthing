@@ -58,3 +58,62 @@ export function getCardSuccess(card) {
         },
     };
 }
+
+export function getSetSearchRequest(pageSize, page, sorted, filtered) {
+    return {
+        type: actionTypes.GET_SET_SEARCH_REQUEST,
+        payload: {
+            pageSize,
+            page,
+            sorted,
+            filtered,
+        },
+    };
+}
+
+export function getSetSearchFailure(error) {
+    return {
+        type: actionTypes.GET_SET_SEARCH_FAILURE,
+        payload: {
+            error,
+        },
+    };
+}
+
+export function getSetSearchSuccess(sets) {
+    return {
+        type: actionTypes.GET_SET_SEARCH_SUCCESS,
+        payload: {
+            sets,
+            receivedAt: Date.now(),
+        },
+    };
+}
+
+export function getSetRequest(id) {
+    return {
+        type: actionTypes.GET_SET_REQUEST,
+        payload: {
+            id,
+        },
+    };
+}
+
+export function getSetFailure(error) {
+    return {
+        type: actionTypes.GET_SET_FAILURE,
+        payload: {
+            error,
+        },
+    };
+}
+
+export function getSetSuccess(set) {
+    return {
+        type: actionTypes.GET_SET_SUCCESS,
+        payload: {
+            set,
+            receivedAt: Date.now(),
+        },
+    };
+}

@@ -18,6 +18,10 @@ Route::get('/card/{id}', 'CardController@get');
 
 Route::post('/card/search/fancy', 'CardController@searchWithFilters');
 
+Route::get('/set/{id}', 'SetController@get');
+
+Route::post('/set/search/fancy', 'SetController@searchWithFilters');
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
