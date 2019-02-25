@@ -46,8 +46,6 @@ class SetSearch extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(this.state);
-        console.log(nextProps.statuses);
         this.setState({
             data: nextProps.data,
             pages: nextProps.statuses.lastPage,
@@ -56,7 +54,6 @@ class SetSearch extends React.Component {
     }
 
     fetchData(state) {
-        console.log(state.page);
         this.props.dispatch(tgcdtActions.getSetSearchRequest(state.pageSize, state.page, state.sorted, state.filtered));
         this.setState({
             // loading: true,
@@ -141,8 +138,7 @@ class SetSearch extends React.Component {
                             maxWidth: 100,
                             accessor: (d) => d.game.en_name,
                             Cell: (row) => {
-                                console.log(row.original.game.logo);
-                                var logo = (row.original.game.logo != null ? <img src={row.original.game.logo} style={{maxWidth: 55, maxHeight: 25}} /> : '');
+                                const logo = (row.original.game.logo != null ? <img src={row.original.game.logo} style={{maxWidth: 55, maxHeight: 25}} /> : '');
                                 return <div>{logo}{row.original.game.en_name}</div>;
                             }
                         },

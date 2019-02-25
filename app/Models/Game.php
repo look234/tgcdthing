@@ -12,6 +12,7 @@ class Game extends Model
      * @var array
      */
     protected $visible = [
+        'id',
         'en_name',
         'logo',
     ];

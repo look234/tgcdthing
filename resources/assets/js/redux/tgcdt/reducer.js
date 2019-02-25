@@ -15,6 +15,18 @@ const initialState = {
         to: defaultPerPage,
         total: 0,
     },
+    byIdRelated: [],
+    statusesRelated: {
+        fetching: false,
+        error: '',
+        lastUpdated: 0,
+        currentPage: 0,
+        from: 0,
+        lastPage: 0,
+        perPage: defaultPerPage,
+        to: defaultPerPage,
+        total: 0,
+    },
 };
 
 const tgcdtReducer = (state = initialState, action) => {
@@ -29,6 +41,28 @@ const tgcdtReducer = (state = initialState, action) => {
                 byId: action.payload.cards.data,
                 statuses: {
                     ...state.statuses,
+                    error: '',
+                    fetching: false,
+                    lastUpdated: action.payload.receivedAt,
+                    currentPage: action.payload.cards.current_page,
+                    from: action.payload.cards.from,
+                    lastPage: action.payload.cards.last_page,
+                    perPage: action.payload.cards.per_page,
+                    to: action.payload.cards.to,
+                    total: action.payload.cards.total,
+                }
+            };
+
+        case actionTypes.GET_CARD_RELATED_REQUEST:
+            return { ...state, statusesRelated: {...state.statusesRelated, error: '', fetching: true}};
+        case actionTypes.GET_CARD_RELATED_FAILURE:
+            return { ...state, statusesRelated: {...state.statusesRelated, error: '', fetching: false}};
+        case actionTypes.GET_CARD_RELATED_SUCCESS:
+            return {
+                ...state,
+                byIdRelated: action.payload.cards,
+                statusesRelated: {
+                    ...state.statusesRelated,
                     error: '',
                     fetching: false,
                     lastUpdated: action.payload.receivedAt,
@@ -110,6 +144,9 @@ export default tgcdtReducer;
 
 export const getSearchData = (state) => state.byId;
 export const getSearchStatuses = (state) => state.statuses;
+
+export const getCardRelatedData = (state) => state.byIdRelated;
+export const getCardRelatedStatuses = (state) => state.statusesRelated;
 
 export const getCardData = (state, id) => state.byId[id];
 export const getCardStatuses = (state) => state.statuses;

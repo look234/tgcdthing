@@ -12,6 +12,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ImageIcon from '@material-ui/icons/Image';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = (theme) => ({
     root: {
@@ -34,15 +35,22 @@ const styles = (theme) => ({
     pos: {
         marginBottom: 12,
     },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
+    loading: {
+        width: '100%',
+        textAlign: 'center',
+    }
 });
 
 function SimpleCard(props) {
-    const {classes, id, cardData} = props;
-    console.log('Card component');
-    console.log(cardData);
+    const {classes, id, cardData, cardRelatedData} = props;
 
-    let content = null;
-    let setContent = null;
+    const loading = (<div className={classes.loading}><CircularProgress className={classes.progress} size={50} /></div>);
+    let content = loading;
+    let setContent = loading;
+    let cardRelatedContent = loading;
 
     if (cardData.sets) {
         setContent = cardData.sets.map((data) => {
@@ -50,6 +58,27 @@ function SimpleCard(props) {
                 const secondaryText = `${data.language ? data.language : ''}`;
                 return (
                     <ListItem button component="a" href={`/set/${data.id}`}>
+                        <ListItemIcon>
+                            <ImageIcon/>
+                        </ListItemIcon>
+                        <ListItemText
+                            disableTypography
+                            inset
+                            primary={<Typography variant="title">{primaryText}</Typography>}
+                            secondary={<Typography variant="subheading">{secondaryText}</Typography>}
+                        />
+                    </ListItem>
+                );
+            }
+        );
+    }
+
+    if (cardRelatedData.length > 0) {
+        cardRelatedContent = cardRelatedData.map((data) => {
+                const primaryText = `${data.card_number ? data.card_number : ''} ${data.printed_name ? data.printed_name : ''}`;
+                const secondaryText = `${data.language ? data.language : ''}`;
+                return (
+                    <ListItem button component="a" href={`/card/${data.id}`}>
                         <ListItemIcon>
                             <ImageIcon/>
                         </ListItemIcon>
@@ -103,6 +132,16 @@ function SimpleCard(props) {
                     </List>
                 </Card>
             </Grid>
+            <Grid item xs={12}>
+                <Card className={classes.card}>
+                    <CardContent>
+                        Related Cards:
+                    </CardContent>
+                    <List>
+                        {cardRelatedContent}
+                    </List>
+                </Card>
+            </Grid>
         </Grid>
     );
 }
@@ -111,6 +150,7 @@ SimpleCard.propTypes = {
     classes: PropTypes.object.isRequired,
     id: PropTypes.number.isRequired,
     cardData: PropTypes.object.isRequired,
+    cardRelatedData: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(SimpleCard);

@@ -31,6 +31,40 @@ export function getSearchSuccess(cards) {
     };
 }
 
+export function getCardRelatedRequest(name, gameId, language, option, page, pageSize) {
+    return {
+        type: actionTypes.GET_CARD_RELATED_REQUEST,
+        payload: {
+            name,
+            gameId,
+            language,
+            option,
+            page,
+            pageSize,
+        },
+    };
+}
+
+export function getCardRelatedFailure(error) {
+    return {
+        type: actionTypes.GET_CARD_RELATED_FAILURE,
+        payload: {
+            error,
+        },
+    };
+}
+
+export function getCardRelatedSuccess(cards) {
+
+    return {
+        type: actionTypes.GET_CARD_RELATED_SUCCESS,
+        payload: {
+            cards,
+            receivedAt: Date.now(),
+        },
+    };
+}
+
 export function getCardRequest(id) {
     return {
         type: actionTypes.GET_CARD_REQUEST,

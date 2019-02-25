@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\DB;
 class CardController extends Controller
 {
 
-    public function get(Request $request, $id) {
+    public function get(Request $request, $id)
+    {
         return Card::where('id', $id)
             ->with('attributes')
             ->with('images')
@@ -24,17 +25,71 @@ class CardController extends Controller
             ->get();
     }
 
+    public function getRelatedByName(Request $request)
+    {
+        $pageSize = $request->query('pageSize');
+        $page = $request->query('page') + 1;
+
+//        Paginator::currentPageResolver(function () use ($page) {
+//            return $page;
+//        });
+
+        $name = $request->query('name');
+        $language = $request->query('language');
+        $game_id = $request->query('gameId');
+        $option = $request->query('option');
+
+        switch ($option) {
+            case 'exact':
+                $whereConditions = [
+                    ['printed_name', '=', $name],
+                    ['cards.language', '=', $language],
+                    ['cards.game_id', '=', $game_id],
+                ];
+                break;
+            case 'fuzzyButNotExact':
+                $whereConditions = [
+                    ['printed_name', 'like', '%' . $name . '%'],
+                    ['printed_name', '!=', $name],
+                    ['cards.language', '=', $language],
+                    ['cards.game_id', '=', $game_id],
+                ];
+                break;
+            case 'fuzzy':
+            default:
+                $whereConditions = [
+                    ['printed_name', 'like', '%' . $name . '%'],
+                    ['cards.language', '=', $language],
+                    ['cards.game_id', '=', $game_id],
+                ];
+                break;
+        }
+
+        return Card::where($whereConditions)
+//            ->with('attributes')
+//            ->with('images')
+//            ->with('names')
+//            ->with('texts')
+            ->with('sets')
+            ->join('card_set', 'cards.id', '=', 'card_set.card_id')
+            ->join('sets', 'sets.id', '=', 'card_set.set_id')
+            ->orderBy('sets.release_date', 'DESC')
+            ->get();
+        //->paginate($pageSize);
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return mixed
      */
-    public function search(Request $request) {
+    public function search(Request $request)
+    {
         //$card = new Card;
 
         return Card::where([
             ['game_id', '=', 1],
             ['language', '=', 'jpn'],
-            ])
+        ])
             //->where('printed_name', 'like', '%' . $request->input('search') . '%')
             //->orWhere('card_number', 'like', $request->input('search') . '%')
             ->with('attributes')
@@ -47,7 +102,8 @@ class CardController extends Controller
             ->get();
     }
 
-    public function searchWithFilters(Request $request) {
+    public function searchWithFilters(Request $request)
+    {
         $pageSize = $request->input('pageSize');
         $page = $request->input('page') + 1;
 
@@ -62,7 +118,7 @@ class CardController extends Controller
             && !empty($request->input('sorted'))) {
             $rawSorted = $request->input('sorted');
 
-            foreach($rawSorted as $key => $value) {
+            foreach ($rawSorted as $key => $value) {
                 $sortedColumnName = $value['id'];
                 $sortDirection = ($value['desc'] ? 'desc' : 'asc');
             }
@@ -75,7 +131,7 @@ class CardController extends Controller
         if ($request->has('filtered') && is_array($request->input('filtered'))
             && !empty($request->input('filtered'))) {
             $rawFilters = $request->input('filtered');
-            foreach($rawFilters as $key => $value) {
+            foreach ($rawFilters as $key => $value) {
                 if ($value['id'] === 'printed_name') {
                     $nameFilters[] = ['name', 'like', '%' . $value['value'] . '%'];
 
