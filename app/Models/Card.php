@@ -22,6 +22,8 @@ class Card extends Model
         'foil_type',
         'parallel',
         'parallel_type',
+        'stamped',
+        'stamps',
         'artist',
         'copyright',
         'raw_data',

@@ -12,6 +12,11 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ImageIcon from '@material-ui/icons/Image';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 
 const styles = (theme) => ({
     root: {
@@ -34,6 +39,9 @@ const styles = (theme) => ({
     pos: {
         marginBottom: 12,
     },
+    heading: {
+        fontWeight: 'bold',
+    }
 });
 
 function Set(props) {
@@ -41,27 +49,113 @@ function Set(props) {
     console.log('Card component');
     console.log(setData);
 
+    const loading = (<div className={classes.loading}><CircularProgress className={classes.progress} size={50} /></div>);
     let content = null;
-    let cardContent = null;
+    let cardContent = loading;
+    let parentSets = loading;
+    let childSets = loading;
 
     if (setData.cards) {
-        cardContent = setData.cards.map((data) => {
-            const primaryText = `${data.card_number ? data.card_number : ''} ${data.printed_name ? data.printed_name : ''}`;
-            const secondaryText = `${data.language ? data.language : ''}`;
-            return (
-                <ListItem button component="a" href={`/card/${data.id}`}>
-                    <ListItemIcon>
-                        <ImageIcon/>
-                    </ListItemIcon>
-                    <ListItemText
-                        disableTypography
-                        inset
-                        primary={<Typography variant="title">{primaryText}</Typography>}
-                        secondary={<Typography variant="subheading">{secondaryText}</Typography>}
-                    />
-                </ListItem>
-            )
-        });
+        if (setData.cards.length > 0) {
+            const cardContentData = setData.cards.map((data) => {
+                const primaryText = `${data.card_number ? data.card_number : ''} ${data.printed_name ? data.printed_name : ''}`;
+                const secondaryText = `${data.language ? data.language : ''}`;
+                return (
+                    <ListItem button component="a" href={`/card/${data.id}`}>
+                        <ListItemIcon>
+                            <ImageIcon/>
+                        </ListItemIcon>
+                        <ListItemText
+                            disableTypography
+                            inset
+                            primary={<Typography variant="title">{primaryText}</Typography>}
+                            secondary={<Typography variant="subheading">{secondaryText}</Typography>}
+                        />
+                    </ListItem>
+                );
+            });
+            cardContent = (<ExpansionPanel expanded>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="headline" className={classes.heading}>Cards found in set: {setData.cards ? setData.cards.length : 0}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <List>
+                        {cardContentData}
+                    </List>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>);
+        } else {
+            cardContent = null;
+        }
+    }
+
+    if (setData.parent_sets) {
+        if (setData.parent_sets.length > 0) {
+            const parentSetsData = setData.parent_sets.map((data) => {
+                const primaryText = `${data.release_date ? data.release_date : ''} • ${data.eng_name ? data.eng_name : ''}`;
+                const secondaryText = `${data.language ? data.language : ''}`;
+                return (
+                    <ListItem button component="a" href={`/set/${data.id}`}>
+                        <ListItemIcon>
+                            <ImageIcon/>
+                        </ListItemIcon>
+                        <ListItemText
+                            disableTypography
+                            inset
+                            primary={<Typography variant="title">{primaryText}</Typography>}
+                            secondary={<Typography variant="subheading">{secondaryText}</Typography>}
+                        />
+                    </ListItem>
+                );
+            });
+            parentSets = (<ExpansionPanel>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="headline" className={classes.heading}>Found in these sets: {setData.parent_sets ? setData.parent_sets.length : 0}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <List>
+                        {parentSetsData}
+                    </List>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>);
+        } else {
+            parentSets = null;
+        }
+    }
+
+    if (setData.child_sets) {
+        if (setData.child_sets.length > 0) {
+            const childSetsData = setData.child_sets.map((data) => {
+                const primaryText = `${data.release_date ? data.release_date : ''} • ${data.eng_name ? data.eng_name : ''}`;
+                const secondaryText = `${data.language ? data.language : ''}`;
+                return (
+                    <ListItem button component="a" href={`/set/${data.id}`}>
+                        <ListItemIcon>
+                            <ImageIcon/>
+                        </ListItemIcon>
+                        <ListItemText
+                            disableTypography
+                            inset
+                            primary={<Typography variant="title">{primaryText}</Typography>}
+                            secondary={<Typography variant="subheading">{secondaryText}</Typography>}
+                        />
+                    </ListItem>
+                );
+            });
+
+            childSets = (<ExpansionPanel>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="headline" className={classes.heading}>Contains these sets: {setData.child_sets ? setData.child_sets.length : 0}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <List>
+                        {childSetsData}
+                    </List>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>);
+        } else {
+            childSets = null;
+        }
     }
 
     if (setData) {
@@ -86,15 +180,11 @@ function Set(props) {
                     </CardContent>
                 </Card>
             </Grid>
+
             <Grid item xs={12}>
-                <Card className={classes.card}>
-                    <CardContent>
-                        Cards found in set: {setData.cards ? setData.cards.length : 0}
-                    </CardContent>
-                    <List>
-                        {cardContent}
-                    </List>
-                </Card>
+                {parentSets}
+                {childSets}
+                {cardContent}
             </Grid>
         </Grid>
     );

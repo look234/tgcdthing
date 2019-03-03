@@ -13,6 +13,10 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ImageIcon from '@material-ui/icons/Image';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ExpansionPanel from "@material-ui/core/ExpansionPanel/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/ExpansionPanelSummary";
+import ExpandMoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
 
 const styles = (theme) => ({
     root: {
@@ -41,6 +45,9 @@ const styles = (theme) => ({
     loading: {
         width: '100%',
         textAlign: 'center',
+    },
+    heading: {
+        fontWeight: 'bold',
     }
 });
 
@@ -53,45 +60,73 @@ function SimpleCard(props) {
     let cardRelatedContent = loading;
 
     if (cardData.sets) {
-        setContent = cardData.sets.map((data) => {
-                const primaryText = `${data.release_date ? data.release_date : ''} • ${data.eng_name ? data.eng_name : ''}`;
-                const secondaryText = `${data.language ? data.language : ''}`;
-                return (
-                    <ListItem button component="a" href={`/set/${data.id}`}>
-                        <ListItemIcon>
-                            <ImageIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            disableTypography
-                            inset
-                            primary={<Typography variant="title">{primaryText}</Typography>}
-                            secondary={<Typography variant="subheading">{secondaryText}</Typography>}
-                        />
-                    </ListItem>
-                );
-            }
-        );
+        if (cardData.sets.length > 0) {
+            const setContentData = cardData.sets.map((data) => {
+                    const primaryText = `${data.release_date ? data.release_date : ''} • ${data.eng_name ? data.eng_name : ''}`;
+                    const secondaryText = `${data.language ? data.language : ''}`;
+                    return (
+                        <ListItem button component="a" href={`/set/${data.id}`}>
+                            <ListItemIcon>
+                                <ImageIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                disableTypography
+                                inset
+                                primary={<Typography variant="title">{primaryText}</Typography>}
+                                secondary={<Typography variant="subheading">{secondaryText}</Typography>}
+                            />
+                        </ListItem>
+                    );
+                }
+            );
+            setContent = (<ExpansionPanel expanded>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="headline" className={classes.heading}>Found in these sets: {cardData.sets ? cardData.sets.length : 0}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <List>
+                        {setContentData}
+                    </List>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>);
+        } else {
+            setContent = null;
+        }
     }
 
-    if (cardRelatedData.length > 0) {
-        cardRelatedContent = cardRelatedData.map((data) => {
-                const primaryText = `${data.card_number ? data.card_number : ''} ${data.printed_name ? data.printed_name : ''}`;
-                const secondaryText = `${data.language ? data.language : ''}`;
-                return (
-                    <ListItem button component="a" href={`/card/${data.id}`}>
-                        <ListItemIcon>
-                            <ImageIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            disableTypography
-                            inset
-                            primary={<Typography variant="title">{primaryText}</Typography>}
-                            secondary={<Typography variant="subheading">{secondaryText}</Typography>}
-                        />
-                    </ListItem>
-                );
-            }
-        );
+    if (cardRelatedData.length) {
+        if (cardRelatedData.length > 0) {
+            const cardRelatedContentData = cardRelatedData.map((data) => {
+                    const primaryText = `${data.card_number ? data.card_number : ''} ${data.printed_name ? data.printed_name : ''}`;
+                    const secondaryText = `${data.language ? data.language : ''}`;
+                    return (
+                        <ListItem button component="a" href={`/card/${data.id}`}>
+                            <ListItemIcon>
+                                <ImageIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                disableTypography
+                                inset
+                                primary={<Typography variant="title">{primaryText}</Typography>}
+                                secondary={<Typography variant="subheading">{secondaryText}</Typography>}
+                            />
+                        </ListItem>
+                    );
+                }
+            );
+            cardRelatedContent = (<ExpansionPanel>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="headline" className={classes.heading}>Related Cards: {cardRelatedData ? cardRelatedData.length : 0}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <List>
+                        {cardRelatedContentData}
+                    </List>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>);
+        } else {
+            cardRelatedContent = null;
+        }
     }
 
     if (cardData) {
@@ -123,24 +158,8 @@ function SimpleCard(props) {
                 </Card>
             </Grid>
             <Grid item xs={12}>
-                <Card className={classes.card}>
-                    <CardContent>
-                        Found in these sets:
-                    </CardContent>
-                    <List>
-                        {setContent}
-                    </List>
-                </Card>
-            </Grid>
-            <Grid item xs={12}>
-                <Card className={classes.card}>
-                    <CardContent>
-                        Related Cards:
-                    </CardContent>
-                    <List>
-                        {cardRelatedContent}
-                    </List>
-                </Card>
+                {setContent}
+                {cardRelatedContent}
             </Grid>
         </Grid>
     );

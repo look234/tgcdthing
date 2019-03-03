@@ -173,7 +173,7 @@ class Search extends React.Component {
                         {
                             Header: "Set",
                             id: "set",
-                            accessor: (d) => (d.sets.length > 0 ? d.sets[0].eng_name : ''),
+                            accessor: (d) => (d.sets.length > 0 ? (<Link to={`/set/${d.sets[0].id}`} target="_blank">{d.sets[0].eng_name}</Link>) : ''),
                         },
                         {
                             Header: "Release Date",

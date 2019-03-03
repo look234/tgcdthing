@@ -93,7 +93,21 @@ class SetSearch extends React.Component {
                             Header: "Cards",
                             id: "cards_count",
                             accessor: "cards_count",
-                            maxWidth: 100,
+                            maxWidth: 75,
+                            Cell: row => row.value ? <div><CheckCircleIcon className={classes.goodIcon} />{row.value}</div> : <div><CancelIcon className={classes.badIcon} />{row.value}</div>,
+                        },
+                        {
+                            Header: "Parent",
+                            id: "parent_sets_count",
+                            accessor: "parent_sets_count",
+                            maxWidth: 75,
+                            Cell: row => row.value ? <div><CheckCircleIcon className={classes.goodIcon} />{row.value}</div> : <div><CancelIcon className={classes.badIcon} />{row.value}</div>,
+                        },
+                        {
+                            Header: "Child",
+                            id: "child_sets_count",
+                            accessor: "child_sets_count",
+                            maxWidth: 75,
                             Cell: row => row.value ? <div><CheckCircleIcon className={classes.goodIcon} />{row.value}</div> : <div><CancelIcon className={classes.badIcon} />{row.value}</div>,
                         },
                         {

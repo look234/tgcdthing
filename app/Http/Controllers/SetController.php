@@ -15,6 +15,8 @@ class SetController extends Controller
         return Set::where('id', $id)
             ->with('cards')
             ->with('game')
+            ->with('parent_sets')
+            ->with('child_sets')
             ->get();
     }
 
@@ -82,6 +84,10 @@ class SetController extends Controller
 //        }
 
 
-        return $cards->withCount('cards')->with('game')->paginate($pageSize);
+        return $cards->withCount('child_sets')
+            ->withCount('parent_sets')
+            ->withCount('cards')
+            ->with('game')
+            ->paginate($pageSize);
     }
 }
