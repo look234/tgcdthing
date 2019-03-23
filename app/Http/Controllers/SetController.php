@@ -13,7 +13,7 @@ class SetController extends Controller
 
     public function get(Request $request, $id) {
         return Set::where('id', $id)
-            ->with('cards')
+            ->with('cards.images')
             ->with('game')
             ->with('parent_sets')
             ->with('child_sets')

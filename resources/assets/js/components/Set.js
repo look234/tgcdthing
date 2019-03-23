@@ -7,10 +7,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import Dropzone from 'react-dropzone';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
+import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import ImageIcon from '@material-ui/icons/Image';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -18,6 +16,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import LazyLoad from "react-lazyload";
+import CardActionArea from "@material-ui/core/CardActionArea/CardActionArea";
 
 const styles = (theme) => ({
     root: {
@@ -57,6 +57,10 @@ const styles = (theme) => ({
                 textAlign: 'center',
             }
         }
+    },
+    media: {
+        height: 400,
+        backgroundSize: 'contain',
     }
 });
 
@@ -73,74 +77,65 @@ function Set(props) {
 
     if (setData.cards) {
         if (setData.cards.length > 0) {
+            console.log(setData.cards);
             const cardContentData = setData.cards.map((data) => {
                 const primaryText = `${data.card_number ? data.card_number : ''} ${data.printed_name ? data.printed_name : ''}`;
                 const secondaryText = `${data.language ? data.language : ''}`;
+
+                let url = null;
+                if ('images' in data && data.images.length > 0) {
+                    url = 'https://s3-us-west-2.amazonaws.com/resources.tgcdt.org/' + data.images[0].image_name;
+                }
                 return (
-                    <ListItem button component="a" href={`/card/${data.id}`}>
-                        <ListItemIcon>
-                            <ImageIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            disableTypography
-                            inset
-                            primary={<Typography variant="title">{primaryText}</Typography>}
-                            secondary={<React.Fragment>
-                                <Typography variant="subheading">{secondaryText}</Typography>
-                                <br/>
-                                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
-                                    {({getRootProps, getInputProps}) => (
-                                        <section className={classes.dropzone}>
-                                            <div {...getRootProps()}>
-                                                <input {...getInputProps()} />
-                                                <p>Front (Scan)</p>
-                                            </div>
-                                        </section>
-                                    )}
-                                </Dropzone>
-                                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
-                                    {({getRootProps, getInputProps}) => (
-                                        <section className={classes.dropzone}>
-                                            <div {...getRootProps()}>
-                                                <input {...getInputProps()} />
-                                                <p>Back (Scan)</p>
-                                            </div>
-                                        </section>
-                                    )}
-                                </Dropzone>
-                                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
-                                    {({getRootProps, getInputProps}) => (
-                                        <section className={classes.dropzone}>
-                                            <div {...getRootProps()}>
-                                                <input {...getInputProps()} />
-                                                <p>Front (Proxy)</p>
-                                            </div>
-                                        </section>
-                                    )}
-                                </Dropzone>
-                                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
-                                    {({getRootProps, getInputProps}) => (
-                                        <section className={classes.dropzone}>
-                                            <div {...getRootProps()}>
-                                                <input {...getInputProps()} />
-                                                <p>Back (Proxy)</p>
-                                            </div>
-                                        </section>
-                                    )}
-                                </Dropzone>
-                            </React.Fragment>}
-                        />
-                    </ListItem>
+                    <Grid item xl={1} lg={2} md={3} sm={6} xs={12}>
+                        <Card className={classes.paper}>
+                            <CardActionArea component="a" href={`/card/${data.id}`}>
+                                <LazyLoad height={200}>
+                                    <CardMedia
+                                        className={classes.media}
+                                        image={`${url}`}
+                                        title={primaryText}
+                                    />
+                                </LazyLoad>
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="h2">
+                                        {primaryText}
+                                    </Typography>
+                                    <Typography component="p">
+                                        {secondaryText}
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </Grid>
                 );
+                // return (
+                //     <ListItem button component="a" href={`/card/${data.id}`}>
+                //         <ListItemIcon>
+                //             <ImageIcon/>
+                //         </ListItemIcon>
+                //         <ListItemText
+                //             disableTypography
+                //             inset
+                //             primary={<Typography variant="title">{primaryText}</Typography>}
+                //             secondary={<>
+                //                 <Typography variant="subheading">{secondaryText}</Typography>
+                //             </>}
+                //         />
+                //     </ListItem>
+                // );
             });
             cardContent = (<ExpansionPanel expanded>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography variant="headline" className={classes.heading}>Cards found in set: {setData.cards ? setData.cards.length : 0}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                    <List>
+                    <Grid container spacing={24}>
                         {cardContentData}
-                    </List>
+                    </Grid>
+                    {/*<List>*/}
+                        {/*{cardContentData}*/}
+                    {/*</List>*/}
                 </ExpansionPanelDetails>
             </ExpansionPanel>);
         } else {
