@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Aws\S3\S3Client;
+use Aws\Credentials\Credentials;
 use App\Models\Card;
 use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
@@ -24,7 +25,7 @@ class ImageController
 
     public function __construct()
     {
-        $credentials = new \Aws\Credentials\Credentials(env('AWS_KEY'), env('AWS_SECRET'));
+        $credentials = new Credentials(env('AWS_KEY'), env('AWS_SECRET'));
         $this->s3 = new S3Client([
             'version' => 'latest',
             'region' => env('AWS_REGION'),
