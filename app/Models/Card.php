@@ -70,7 +70,7 @@ class Card extends Model
 
     public function images()
     {
-        return $this->hasMany('App\Models\Image');
+        return $this->belongsToMany('App\Models\Image');
     }
 
     public function sets()

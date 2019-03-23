@@ -138,6 +138,7 @@ class CardController extends Controller
 
                 } else if ($value['id'] === 'set') {
                     $setFilters[] = ['eng_name', 'like', '%' . $value['value'] . '%'];
+                    continue;
                 }
 
                 $filters[] = [$value['id'], 'like', '%' . $value['value'] . '%'];

@@ -14,7 +14,12 @@ use Illuminate\Http\Request;
 */
 Route::post('/card/search', 'CardController@search');
 
-Route::get('/card/{id}', 'CardController@get')->where('id', '[0-9]+');;
+Route::get('/image', 'ImageController@get');
+Route::get('/image/unsorted/folder/{piece1?}/{piece2?}/{piece3?}/{piece4?}/{piece5?}/{piece6?}', 'ImageController@getUnsortedFolders');
+Route::get('/image/unsorted/resource/{piece1?}/{piece2?}/{piece3?}/{piece4?}/{piece5?}/{piece6?}', 'ImageController@getUnsortedResources');
+Route::post('/image/unsorted/link/', 'ImageController@store');
+
+Route::get('/card/{id}', 'CardController@get')->where('id', '[0-9]+');
 
 Route::get('/card/related', 'CardController@getRelatedByName');
 

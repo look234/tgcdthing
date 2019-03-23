@@ -46,8 +46,6 @@ class Search extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(this.state);
-        console.log(nextProps.statuses);
         this.setState({
             data: nextProps.data,
             pages: nextProps.statuses.lastPage,
@@ -56,7 +54,6 @@ class Search extends React.Component {
     }
 
     fetchData(state) {
-        console.log(state.page);
         this.props.dispatch(tgcdtActions.getSearchRequest(state.pageSize, state.page, state.sorted, state.filtered));
         this.setState({
             // loading: true,
@@ -65,14 +62,12 @@ class Search extends React.Component {
 
     render() {
         const { data, pages, loading } = this.state;
-        const { classes } = this.props;
+        const { classes, handleFollowUpClick } = this.props;
 
         //const formattedData = Object.keys(data).map((key) => data[key]);
-        console.log(data);
+        //console.log(data);
         return (
             <div>
-
-                <h3>TGCDT Foo</h3>
                 <ReactTable
                     manual
                     data={data}
@@ -82,6 +77,7 @@ class Search extends React.Component {
                     filterable
                     defaultPageSize={50}
                     className="-striped -highlight"
+                    // getTrProps={(state, rowInfo) => {}}
                     columns={[
                         {
                             Header: "id",
@@ -97,7 +93,7 @@ class Search extends React.Component {
                             id: "raw_data",
                             accessor: "raw_data",
                             maxWidth: 50,
-                            Cell: row => row.value ? <CheckCircleIcon className={classes.goodIcon} /> : <CancelIcon className={classes.badIcon} />,
+                            Cell: row => <div onClick={() => handleFollowUpClick(row.original.id, row.original.game.id, row.original.language)}>{row.value ? <CheckCircleIcon className={classes.goodIcon} /> : <CancelIcon className={classes.badIcon} />}</div>,
                         },
                         {
                             Header: "Card Number",
@@ -139,6 +135,7 @@ class Search extends React.Component {
                             Header: "Rarity",
                             id: "rarity",
                             accessor: "rarity",
+                            maxWidth: 125,
                             filterMethod: (filter, rows) =>
                                 matchSorter(rows, filter.value, { keys: ["rarity"] }),
                             filterAll: true,
@@ -147,9 +144,18 @@ class Search extends React.Component {
                             Header: "Foil",
                             id: "foil_type",
                             accessor: "foil_type",
-                            maxWidth: 100,
+                            maxWidth: 125,
                             filterMethod: (filter, rows) =>
                                 matchSorter(rows, filter.value, { keys: ["foil_type"] }),
+                            filterAll: true,
+                        },
+                        {
+                            Header: "Stamps",
+                            id: "stamps",
+                            accessor: "stamps",
+                            maxWidth: 125,
+                            filterMethod: (filter, rows) =>
+                                matchSorter(rows, filter.value, { keys: ["stamps"] }),
                             filterAll: true,
                         },
                         {
@@ -187,7 +193,7 @@ class Search extends React.Component {
                             maxWidth: 100,
                             accessor: (d) => d.game.en_name,
                             Cell: (row) => {
-                                console.log(row.original.game.logo);
+                                //console.log(row.original.game.logo);
                                 var logo = (row.original.game.logo != null ? <img src={row.original.game.logo} style={{maxWidth: 55, maxHeight: 25}} /> : '');
                                 return <div>{logo}{row.original.game.en_name}</div>;
                             }
@@ -212,6 +218,7 @@ Search.propTypes = {
     dispatch: PropTypes.func.isRequired,
     data: PropTypes.array,
     statuses: PropTypes.object,
+    handleFollowUpClick: PropTypes.func,
 };
 
 Search.defaultProps = {

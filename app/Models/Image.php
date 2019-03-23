@@ -17,4 +17,18 @@ class Image extends Model
         'dimension',
         'image_name',
     ];
+
+    protected $fillable = [
+        'card_id',
+        'game_id',
+        'language',
+        'image_type',
+        'dimension',
+        'image_name',
+    ];
+
+    public function cards()
+    {
+        return $this->belongsToMany('App\Models\Card');
+    }
 }

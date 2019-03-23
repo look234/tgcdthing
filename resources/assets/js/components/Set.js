@@ -7,6 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
+import Dropzone from 'react-dropzone';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
@@ -41,13 +42,28 @@ const styles = (theme) => ({
     },
     heading: {
         fontWeight: 'bold',
+    },
+    dropzone: {
+        border: 'solid 1px #000000',
+        height: 150,
+        width: 150,
+        display: 'inline-block',
+        margin: 5,
+        '& div': {
+            width: '100%',
+            height: '100%',
+            '& p': {
+                paddingTop: '40%',
+                textAlign: 'center',
+            }
+        }
     }
 });
 
 function Set(props) {
     const {classes, id, setData} = props;
-    console.log('Card component');
-    console.log(setData);
+    //console.log('Card component');
+    //console.log(setData);
 
     const loading = (<div className={classes.loading}><CircularProgress className={classes.progress} size={50} /></div>);
     let content = null;
@@ -69,7 +85,50 @@ function Set(props) {
                             disableTypography
                             inset
                             primary={<Typography variant="title">{primaryText}</Typography>}
-                            secondary={<Typography variant="subheading">{secondaryText}</Typography>}
+                            secondary={<React.Fragment>
+                                <Typography variant="subheading">{secondaryText}</Typography>
+                                <br/>
+                                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                                    {({getRootProps, getInputProps}) => (
+                                        <section className={classes.dropzone}>
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                <p>Front (Scan)</p>
+                                            </div>
+                                        </section>
+                                    )}
+                                </Dropzone>
+                                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                                    {({getRootProps, getInputProps}) => (
+                                        <section className={classes.dropzone}>
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                <p>Back (Scan)</p>
+                                            </div>
+                                        </section>
+                                    )}
+                                </Dropzone>
+                                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                                    {({getRootProps, getInputProps}) => (
+                                        <section className={classes.dropzone}>
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                <p>Front (Proxy)</p>
+                                            </div>
+                                        </section>
+                                    )}
+                                </Dropzone>
+                                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                                    {({getRootProps, getInputProps}) => (
+                                        <section className={classes.dropzone}>
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                <p>Back (Proxy)</p>
+                                            </div>
+                                        </section>
+                                    )}
+                                </Dropzone>
+                            </React.Fragment>}
                         />
                     </ListItem>
                 );

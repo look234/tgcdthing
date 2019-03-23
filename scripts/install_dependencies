@@ -1,7 +1,7 @@
 #!/bin/bash
 cd /var/www/phplaravel
 yum -y update
-yum -y install httpd24 php56 php56-devel php56-mysqlnd php56-pdo php56-mbstring php56-mcrypt
+yum -y install httpd24 php56 php56-devel php56-mysqlnd php56-pdo php56-mbstring php56-mcrypt ImageMagick
 curl -s https://getcomposer.org/installer | php
 php composer.phar install
 mv composer.phar /usr/local/bin/composer

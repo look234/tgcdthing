@@ -4,6 +4,7 @@ import Search from './Search';
 import CardContainer from '../containers/CardContainer';
 import SetContainer from '../containers/SetContainer';
 import SetSearch from './SetSearch';
+import ImageGallery from '../containers/ImageContainer';
 
 const BasicExample = () => (
     <Router>
@@ -13,6 +14,7 @@ const BasicExample = () => (
             <Route path="/card/:id" component={CardHolder} />
             <Route exact path="/set" component={SetSearchContainer} />
             <Route path="/set/:id" component={SetHolder} />
+            <Route path="/image/gallery" component={ImageGallery} />
         </div>
     </Router>
 );

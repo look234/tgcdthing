@@ -31,6 +31,10 @@ const styles = (theme) => ({
     card: {
         minWidth: 275,
     },
+    cardDataHolder: {
+        display: 'inline-block',
+        verticalAlign: 'top',
+    },
     bullet: {
         display: 'inline-block',
         margin: '0 2px',
@@ -54,7 +58,9 @@ const styles = (theme) => ({
 function SimpleCard(props) {
     const {classes, id, cardData, cardRelatedData} = props;
 
-    const loading = (<div className={classes.loading}><CircularProgress className={classes.progress} size={50} /></div>);
+    console.log(cardData);
+
+    const loading = (<div className={classes.loading}><CircularProgress className={classes.progress} size={50}/></div>);
     let content = loading;
     let setContent = loading;
     let cardRelatedContent = loading;
@@ -80,8 +86,9 @@ function SimpleCard(props) {
                 }
             );
             setContent = (<ExpansionPanel expanded>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="headline" className={classes.heading}>Found in these sets: {cardData.sets ? cardData.sets.length : 0}</Typography>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                    <Typography variant="headline" className={classes.heading}>Found in these
+                        sets: {cardData.sets ? cardData.sets.length : 0}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <List>
@@ -115,8 +122,9 @@ function SimpleCard(props) {
                 }
             );
             cardRelatedContent = (<ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="headline" className={classes.heading}>Related Cards: {cardRelatedData ? cardRelatedData.length : 0}</Typography>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                    <Typography variant="headline" className={classes.heading}>Related
+                        Cards: {cardRelatedData ? cardRelatedData.length : 0}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <List>
@@ -130,21 +138,40 @@ function SimpleCard(props) {
     }
 
     if (cardData) {
+        let divStyle = {
+            height: '400px',
+            width: '400px',
+            display: 'inline-block',
+        };
+        if ('images' in cardData && cardData.images.length > 0) {
+            divStyle = {
+                height: '400px',
+                width: '400px',
+                display: 'inline-block',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundImage: 'url(https://s3-us-west-2.amazonaws.com/resources.tgcdt.org/' + cardData.images[0].image_name + ')'
+            }
+        }
         content = (
-            <div>
-                <Typography variant="display2">
-                    {cardData ? cardData.printed_name : ''} ({cardData ? cardData.card_number : ''}) [{id}]
-                </Typography>
-                <Typography variant="headline">
-                    {cardData ? cardData.language : ''} {cardData && cardData.edition ? ` • ${cardData.edition}` : ''} {cardData ? ` • ${cardData.rarity}` : ''}
-                </Typography>
-                <Typography className={classes.pos} color="textSecondary">
-                    Artist: {cardData ? cardData.artist : ''}
-                </Typography>
-                <Typography component="p">
-                    {cardData ? cardData.copyright : ''}
-                </Typography>
-            </div>
+            <>
+                <div style={divStyle}></div>
+                <div className={classes.cardDataHolder}>
+                    <Typography variant="display2">
+                        {cardData ? cardData.printed_name : ''} ({cardData ? cardData.card_number : ''}) [{id}]
+                    </Typography>
+                    <Typography variant="headline">
+                        {cardData ? cardData.language : ''} {cardData && cardData.edition ? ` • ${cardData.edition}` : ''} {cardData ? ` • ${cardData.rarity}` : ''}
+                    </Typography>
+                    <Typography className={classes.pos} color="textSecondary">
+                        Artist: {cardData ? cardData.artist : ''}
+                    </Typography>
+                    <Typography component="p">
+                        {cardData ? cardData.copyright : ''}
+                    </Typography>
+                </div>
+            </>
         );
     }
 
