@@ -2,7 +2,6 @@
 cd /var/www/phplaravel
 yum -y update
 yum -y install httpd24 php72 php72-mbstring php72-mysql php72-pdo php72-mcrypt php72-devel php72-gd ImageMagick
-
 curl -s https://getcomposer.org/installer | php
 php composer.phar install
 mv composer.phar /usr/local/bin/composer
