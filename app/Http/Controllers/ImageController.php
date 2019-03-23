@@ -122,7 +122,7 @@ class ImageController
         $file = $result['Body']; //file_get_contents(str_replace(' ','+', 'https://s3-' . env('AWS_REGION') . '.amazonaws.com/' . env('AWS_BUCKET') . '/' . $path));
         $extension = preg_replace("#\?.*#", "", pathinfo($path, PATHINFO_EXTENSION));
         // $hash = hash_file('md5', $file);
-        $temp_path = '' . uniqid() . '.' . $extension;
+        $temp_path = storage_path() . '/' . uniqid() . '.' . $extension;
         file_put_contents($temp_path, $file);
 
         $this->storeImage($request, $temp_path, $extension, 'raw');
