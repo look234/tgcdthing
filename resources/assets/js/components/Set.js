@@ -8,7 +8,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import ImageIcon from '@material-ui/icons/Image';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -16,18 +15,12 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
-import LazyLoad from "react-lazyload";
-import CardActionArea from "@material-ui/core/CardActionArea/CardActionArea";
+import CardImageWithBaseData from "./common/cardImageWithBaseData";
 
 const styles = (theme) => ({
     root: {
         // fontSize:  16,
         flexGrow: 1,
-    },
-    paper: {
-        padding: theme.spacing.unit * 2,
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
     },
     card: {
         minWidth: 275,
@@ -58,18 +51,12 @@ const styles = (theme) => ({
             }
         }
     },
-    media: {
-        height: 400,
-        backgroundSize: 'contain',
-    }
 });
 
 function Set(props) {
     const {classes, id, setData} = props;
-    //console.log('Card component');
-    //console.log(setData);
-
     const loading = (<div className={classes.loading}><CircularProgress className={classes.progress} size={50} /></div>);
+
     let content = null;
     let cardContent = loading;
     let parentSets = loading;
@@ -79,51 +66,11 @@ function Set(props) {
         if (setData.cards.length > 0) {
             console.log(setData.cards);
             const cardContentData = setData.cards.map((data) => {
-                const primaryText = `${data.card_number ? data.card_number : ''} ${data.printed_name ? data.printed_name : ''}`;
-                const secondaryText = `${data.language ? data.language : ''}`;
-
-                let url = null;
-                if ('images' in data && data.images.length > 0) {
-                    url = 'https://s3-us-west-2.amazonaws.com/resources.tgcdt.org/' + data.images[0].image_name;
-                }
                 return (
                     <Grid item xl={1} lg={2} md={3} sm={6} xs={12}>
-                        <Card className={classes.paper}>
-                            <CardActionArea component="a" href={`/card/${data.id}`}>
-                                <LazyLoad height={200}>
-                                    <CardMedia
-                                        className={classes.media}
-                                        image={`${url}`}
-                                        title={primaryText}
-                                    />
-                                </LazyLoad>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                        {primaryText}
-                                    </Typography>
-                                    <Typography component="p">
-                                        {secondaryText}
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
+                        <CardImageWithBaseData cardData={data}/>
                     </Grid>
                 );
-                // return (
-                //     <ListItem button component="a" href={`/card/${data.id}`}>
-                //         <ListItemIcon>
-                //             <ImageIcon/>
-                //         </ListItemIcon>
-                //         <ListItemText
-                //             disableTypography
-                //             inset
-                //             primary={<Typography variant="title">{primaryText}</Typography>}
-                //             secondary={<>
-                //                 <Typography variant="subheading">{secondaryText}</Typography>
-                //             </>}
-                //         />
-                //     </ListItem>
-                // );
             });
             cardContent = (<ExpansionPanel expanded>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -133,9 +80,6 @@ function Set(props) {
                     <Grid container spacing={24}>
                         {cardContentData}
                     </Grid>
-                    {/*<List>*/}
-                        {/*{cardContentData}*/}
-                    {/*</List>*/}
                 </ExpansionPanelDetails>
             </ExpansionPanel>);
         } else {

@@ -7,9 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ImageIcon from '@material-ui/icons/Image';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -17,16 +15,13 @@ import ExpansionPanel from "@material-ui/core/ExpansionPanel/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/ExpansionPanelSummary";
 import ExpandMoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
+import CardNumberWithIcon from "./common/cardNumberWithIcon";
+import CardImageWithBaseData from "./common/cardImageWithBaseData";
 
 const styles = (theme) => ({
     root: {
         fontSize: 16,
         flexGrow: 1,
-    },
-    paper: {
-        padding: theme.spacing.unit * 2,
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
     },
     card: {
         minWidth: 275,
@@ -104,32 +99,21 @@ function SimpleCard(props) {
     if (cardRelatedData.length) {
         if (cardRelatedData.length > 0) {
             const cardRelatedContentData = cardRelatedData.map((data) => {
-                    const primaryText = `${data.card_number ? data.card_number : ''} ${data.printed_name ? data.printed_name : ''}`;
-                    const secondaryText = `${data.language ? data.language : ''}`;
-                    return (
-                        <ListItem button component="a" href={`/card/${data.id}`}>
-                            <ListItemIcon>
-                                <ImageIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                disableTypography
-                                inset
-                                primary={<Typography variant="title">{primaryText}</Typography>}
-                                secondary={<Typography variant="subheading">{secondaryText}</Typography>}
-                            />
-                        </ListItem>
-                    );
-                }
-            );
+                return (
+                    <Grid item xl={1} lg={2} md={3} sm={6} xs={12}>
+                        <CardImageWithBaseData cardData={data}/>
+                    </Grid>
+                );
+            });
             cardRelatedContent = (<ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
                     <Typography variant="headline" className={classes.heading}>Related
                         Cards: {cardRelatedData ? cardRelatedData.length : 0}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                    <List>
+                    <Grid container spacing={24}>
                         {cardRelatedContentData}
-                    </List>
+                    </Grid>
                 </ExpansionPanelDetails>
             </ExpansionPanel>);
         } else {
@@ -156,13 +140,15 @@ function SimpleCard(props) {
         }
         content = (
             <>
-                <div style={divStyle}></div>
+                <div style={divStyle}/>
                 <div className={classes.cardDataHolder}>
                     <Typography variant="display2">
-                        {cardData ? cardData.printed_name : ''} ({cardData ? cardData.card_number : ''}) [{id}]
+                        {cardData ? cardData.printed_name : ''} [{id}]
                     </Typography>
                     <Typography variant="headline">
-                        {cardData ? cardData.language : ''} {cardData && cardData.edition ? ` • ${cardData.edition}` : ''} {cardData ? ` • ${cardData.rarity}` : ''}
+                        <CardNumberWithIcon iconName={cardData.set_icon} cardNumber={cardData.card_number}/>&nbsp;
+                        <div
+                            style={{display: 'inline'}}>{cardData.language} • {cardData.edition} • {cardData.rarity}</div>
                     </Typography>
                     <Typography className={classes.pos} color="textSecondary">
                         Artist: {cardData ? cardData.artist : ''}

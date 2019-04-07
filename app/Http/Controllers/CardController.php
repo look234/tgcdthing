@@ -71,9 +71,11 @@ class CardController extends Controller
 //            ->with('names')
 //            ->with('texts')
             ->with('sets')
+            ->with('images')
             ->join('card_set', 'cards.id', '=', 'card_set.card_id')
             ->join('sets', 'sets.id', '=', 'card_set.set_id')
-            ->select(['card_set.id AS card_set_id', 'cards.*'])
+            ->select(['cards.*', 'sets.release_date'])
+            ->groupBy(['cards.id', 'card_set.card_id', 'sets.release_date'])
             ->orderBy('sets.release_date', 'DESC')
             ->get();
         //->paginate($pageSize);
@@ -127,6 +129,7 @@ class CardController extends Controller
 
         $filters = [];
         $setFilters = [];
+        $gameFilters = [];
         $nameFilters = [];
 
         if ($request->has('filtered') && is_array($request->input('filtered'))
@@ -139,13 +142,16 @@ class CardController extends Controller
                 } else if ($value['id'] === 'set') {
                     $setFilters[] = ['eng_name', 'like', '%' . $value['value'] . '%'];
                     continue;
+                } else if ($value['id'] === 'game') {
+                    $gameFilters[] = ['en_name', 'like', '%' . $value['value'] . '%'];
+                    continue;
                 }
 
                 $filters[] = [$value['id'], 'like', '%' . $value['value'] . '%'];
             }
         }
 
-        $cards = Card::where($filters)->orderBy($sortedColumnName, $sortDirection);
+        $cards = Card::whereNotNull('id')->where($filters)->orderBy($sortedColumnName, $sortDirection);
 
         if (!empty($setFilters)) {
 //            $cards->load(['sets' => function ($query) use ($setFilters) {
@@ -160,6 +166,14 @@ class CardController extends Controller
             $cards->with('sets');
         }
 
+        if (!empty($gameFilters)) {
+            $cards->with('game')->whereHas('game', function ($query) use ($gameFilters) {
+                $query->where($gameFilters);
+            });
+        } else {
+            $cards->with('game');
+        }
+
 //        if (!empty($nameFilters)) {
 //            $cards->with('names')->orWhereHas('names', function ($query) use ($nameFilters) {
 //                $query->where($nameFilters);
@@ -169,6 +183,6 @@ class CardController extends Controller
 //        }
 
 
-        return $cards->with('attributes', 'images', 'texts', 'game')->paginate($pageSize);
+        return $cards->with('attributes', 'images', 'texts')->paginate($pageSize);
     }
 }

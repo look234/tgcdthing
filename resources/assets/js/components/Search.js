@@ -7,9 +7,11 @@ import matchSorter from 'match-sorter';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { withStyles } from '@material-ui/core/styles';
+import debounce from 'lodash/debounce';
 
 import * as tgcdtActions from '../redux/tgcdt/actions';
 import {getSearchData, getSearchStatuses} from './redux/reducer';
+import CardNumberWithIcon from "./common/cardNumberWithIcon";
 
 const styles = theme => ({
     icon: {
@@ -33,6 +35,15 @@ class Search extends React.Component {
             loading: false,
         };
 
+        this.filtering = false;
+
+        this.onFilteredChange = this.onFilteredChange.bind(this);
+        this.fetchStrategy = this.fetchStrategy.bind(this);
+
+        this.fetchData = this.fetchData.bind(this);
+        this.fetchDataWithDebounce = debounce(this.fetchData, 700);
+        // ^ debounced version of "fetchData"
+
         this.fetchData = this.fetchData.bind(this);
     }
 
@@ -53,7 +64,20 @@ class Search extends React.Component {
         });
     }
 
+    fetchStrategy(tableState) {
+        if(this.filtering) {
+            return this.fetchDataWithDebounce(tableState)
+        } else {
+            return this.fetchData(tableState);
+        }
+    }
+
+    onFilteredChange(column, value) {
+        this.filtering = true; // when the filter changes, that means someone is typing
+    }
+
     fetchData(state) {
+        this.filtering = false;
         this.props.dispatch(tgcdtActions.getSearchRequest(state.pageSize, state.page, state.sorted, state.filtered));
         this.setState({
             // loading: true,
@@ -73,11 +97,24 @@ class Search extends React.Component {
                     data={data}
                     pages={pages}
                     loading={loading}
-                    onFetchData={this.fetchData}
+                    onFetchData={this.fetchStrategy}
                     filterable
+                    onFilteredChange={this.onFilteredChange}
                     defaultPageSize={50}
                     className="-striped -highlight"
-                    // getTrProps={(state, rowInfo) => {}}
+                    // getTrProps={(state, rowInfo) => {
+                    //     if (rowInfo && rowInfo.row) {
+                    //         console.log(rowInfo);
+                    //         return {
+                    //             style: {
+                    //                 background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
+                    //                 color: rowInfo.index === this.state.selected ? 'white' : 'black'
+                    //             }
+                    //         }
+                    //     }else{
+                    //         return {}
+                    //     }
+                    // }}
                     columns={[
                         {
                             Header: "id",
@@ -96,6 +133,13 @@ class Search extends React.Component {
                             Cell: row => <div onClick={() => handleFollowUpClick(row.original.id, row.original.game.id, row.original.language)}>{row.value ? <CheckCircleIcon className={classes.goodIcon} /> : <CancelIcon className={classes.badIcon} />}</div>,
                         },
                         {
+                            Header: "Image",
+                            id: "images",
+                            accessor: "images",
+                            maxWidth: 50,
+                            Cell: row => <div>{row.value.length > 0 ? <CheckCircleIcon className={classes.goodIcon} /> : <CancelIcon className={classes.badIcon} />}</div>,
+                        },
+                        {
                             Header: "Card Number",
                             id: "card_number",
                             accessor: "card_number",
@@ -103,6 +147,10 @@ class Search extends React.Component {
                             filterMethod: (filter, rows) =>
                                 matchSorter(rows, filter.value, { keys: ["card_number"] }),
                             filterAll: true,
+                            Cell: (row) => {
+                                return <CardNumberWithIcon iconName={row.original.set_icon}
+                                                           cardNumber={row.original.card_number}/>;
+                            },
                         },
                         {
                             Header: "Printed Name",

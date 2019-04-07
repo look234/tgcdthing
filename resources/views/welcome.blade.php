@@ -10,7 +10,7 @@
 </head>
 <body>
 <h2 style="text-align: center">TGCDT</h2>
-<div id="root"></div>
+<div id="root" style="margin: 16px;"></div>
 <script src="{{asset('js/app.js')}}" ></script>
 </body>
 </html>

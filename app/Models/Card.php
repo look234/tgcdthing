@@ -27,6 +27,7 @@ class Card extends Model
         'artist',
         'copyright',
         'raw_data',
+        'set_icon',
         //'artists',
         'attributes',
         //'companies',

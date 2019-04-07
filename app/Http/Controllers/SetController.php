@@ -60,7 +60,7 @@ class SetController extends Controller
             }
         }
 
-        $cards = Set::where($filters)->orderBy($sortedColumnName, $sortDirection);
+        $cards = Set::whereNotNull('id')->where($filters)->orderBy($sortedColumnName, $sortDirection);
 
 //        if (!empty($setFilters)) {
 ////            $cards->load(['sets' => function ($query) use ($setFilters) {
