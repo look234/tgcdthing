@@ -39,7 +39,9 @@ function CardImageWithBaseData(props) {
 
     if ('images' in cardData && cardData.images.length > 0) {
         const image = cardData.images.filter(value => value.dimension == 250);
-        url = 'https://s3-us-west-2.amazonaws.com/resources.tgcdt.org/' + image[0].image_name;
+        if (image.length > 0) {
+            url = 'https://s3-us-west-2.amazonaws.com/resources.tgcdt.org/' + image[0].image_name;
+        }
     }
 
     return (
