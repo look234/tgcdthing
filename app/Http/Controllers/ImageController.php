@@ -127,8 +127,8 @@ class ImageController
 
         $this->storeImage($request, $temp_path, $extension, 'raw');
 
-        exec("convert " . $temp_path . " -deskew 40% -fuzz 25% -trim +repage " . $temp_path);
-        exec("convert " . $temp_path . " -crop `convert " . $temp_path . " -morphology Close Disk -trim -format '%[fx:w]x%[fx:h]+%[fx:page.x]+%[fx:page.y]' info:` +repage " . $temp_path);
+//        exec("convert " . $temp_path . " -deskew 40% -fuzz 25% -trim +repage " . $temp_path);
+//        exec("convert " . $temp_path . " -crop `convert " . $temp_path . " -morphology Close Disk -trim -format '%[fx:w]x%[fx:h]+%[fx:page.x]+%[fx:page.y]' info:` +repage " . $temp_path);
         exec("convert " . $temp_path . " -strip " . $temp_path);
         $this->storeImage($request, $temp_path, $extension,'raw_cropped');
 
