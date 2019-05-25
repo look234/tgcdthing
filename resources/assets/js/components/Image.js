@@ -258,15 +258,42 @@ function ImageGallery(props) {
                             if (search in folders && folders[search].length > 0) {
                                 subSubList = folders[search].map((data) => {
                                     const subSubText = `${data.Prefix ? (data.Prefix).split('/')[3] : ''}`;
+                                    const subSearch = `${primaryText}/${subText}/${subSubText}`;
+                                    let subSubSubList = null;
+                                    if (subSearch in folders && folders[subSearch].length > 0) {
+                                        subSubSubList = folders[subSearch].map((data) => {
+                                            const subSubSubText = `${data.Prefix ? (data.Prefix).split('/')[4] : ''}`;
+                                            const subSubSearch = `${primaryText}/${subText}/${subSubText}/${subSubSubText}`;
+                                            return (
+                                                <ListItem button
+                                                          onClick={() => getUnsortedResources(`${subSubSearch}`)}
+                                                          className={classes.nested}>
+                                                    <ListItemIcon className={classes.subListItemIcon}>
+                                                        <SubdirectoryArrowRightIcon/>
+                                                    </ListItemIcon>
+                                                    <ListItemText className={classes.listItemText} disableTypography
+                                                                  primary={<Typography
+                                                                      variant="title">{subSubSubText}</Typography>}/>
+                                                </ListItem>
+                                            );
+                                        });
+                                    }
+
                                     return (
-                                        <ListItem button onClick={() => getUnsortedResources(`${primaryText}/${subText}/${subSubText}`)}
-                                                  className={classes.nested}>
-                                            <ListItemIcon className={classes.subListItemIcon}>
-                                                <SubdirectoryArrowRightIcon/>
-                                            </ListItemIcon>
-                                            <ListItemText className={classes.listItemText} disableTypography
-                                                          primary={<Typography variant="title">{subSubText}</Typography>}/>
-                                        </ListItem>
+                                        <>
+                                            <ListItem button
+                                                      onClick={() => getUnsortedResources(`${subSearch}`)}
+                                                      className={classes.nested}>
+                                                <ListItemIcon className={classes.subListItemIcon}>
+                                                    <SubdirectoryArrowRightIcon/>
+                                                </ListItemIcon>
+                                                <ListItemText className={classes.listItemText} disableTypography
+                                                              primary={<Typography variant="title">{subSubText}</Typography>}/>
+                                            </ListItem>
+                                            <List component="div" disablePadding>
+                                                {subSubSubList}
+                                            </List>
+                                        </>
                                     );
                                 });
                             }
